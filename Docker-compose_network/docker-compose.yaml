@@ -1,0 +1,58 @@
+# env COMPOSE_PROJECT_NAME
+name: mariadb_adminer_v1
+
+services:
+  ## adminer container
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    restart: always
+    environment:
+      ADMINER_DEFAULT_SERVER: mariadb
+    ports:
+      - 8080:8080
+    depends_on:
+      - mariadb
+    networks:
+      - ext_network
+
+  ## mariadb (mysql) container
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: always
+    tty: true
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+      # - 3306:3306
+      - 3306
+    environment:
+      ## задаём имя default-базы
+      # MYSQL_DATABASE: mariadb
+      MYSQL_USER: mariadb_user                                  
+      MYSQL_PASSWORD_FILE: /run/secrets/db_user_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      ## если создавать пароли в явно открытом виде!!! 
+      # MARIADB_PASSWORD: 'password'
+      # MARIADB_ROOT_PASSWORD: 'root_password'
+    secrets:
+      ## задаём переменные для файлов паролей
+      - db_user_password
+      - db_root_password
+    networks:
+      - ext_network
+
+networks:
+  ext_network:
+    name: mariadb_adminer_net
+    driver: bridge
+    ## если используем существующую подсеть
+    # external: true
+
+secrets:
+  ## файлы паролей для переменных
+  db_user_password:
+    file: ./secrets/user_password.txt
+  db_root_password:
+    file: ./secrets/root_password.txt
