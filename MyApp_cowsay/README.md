@@ -1,10 +1,13 @@
-### Собрать образ из Dockerfile:
 [Docker Docs - Build](https://docs.docker.com/reference/cli/docker/image/build/#text-files)
 
-    # под pwsh (windows)
+### Собрать образ из Dockerfile:
+
+> под pwsh (windows)
+
     Get-Content .\Dockerfile | docker build - -t <docker_id>/myapp
 
-    # универсальная сборка образа
+> универсальная сборка образа
+
     docker build -t <docker_id>/myapp .
 
 ### Удалить остановленные и неиспользуемые контейнеры без дополнительных вопросов:
