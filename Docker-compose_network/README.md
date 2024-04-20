@@ -2,13 +2,16 @@
 2. [Docker Docs - --detach](https://docs.docker.com/reference/cli/docker/container/run/#detach)
 3. [Docker Docs - Volumes](https://docs.docker.com/storage/volumes/#start-a-container-with-a-volume)
 4. [Docker Docs - Compose](https://docs.docker.com/reference/cli/docker/compose/)
-4. [Docker Docs - Compose Name-top-level](https://docs.docker.com/compose/compose-file/04-version-and-name/#name-top-level-element)
+5. [Docker Docs - Compose Name-top-level](https://docs.docker.com/compose/compose-file/04-version-and-name/#name-top-level-element)
+6. [Docker Docs - Compose Networks-top-level](https://docs.docker.com/compose/compose-file/06-networks/)
 <br>
 
 ### Создать свою подсеть со узнаваемым именем
 
-    # --driver - тип коммутирующего "устройства", bridge - по умолчанию (можно не задавать)
-    # --attachable - снять ограничения для присоединения контейнеров к overlay network, запущенных вручную
+> * **--driver** - тип коммутирующего "устройства", bridge - по умолчанию (можно не задавать)
+> * **--attachable** - снять ограничения для присоединения контейнеров к overlay network, запущенных вручную
+
+<br>
 
     docker network create --driver bridge --attachable <ext_network_name>
 <br>
@@ -25,23 +28,32 @@
 
 ### Посмотреть список запущенных контейнеров в своей подсети
     
-    # имя сети задаётся 
+> * имя сети задаётся в **top-level**-аттрибуте <ins>**networks**</ins>:
 
     docker network inspect <ext_network.name>
 <br>
 
 ### Запуск MariaDB в своей подсети (CLI)
-    ##  пароли видны в явно открытом виде!!!
-    # --detach - запуск в фоне
-    # --name - задаём имя контейнера
-    # --env MARIADB_USER, --env MARIADB_PASSWORD - задаём имя и пароль непривилегированного пользователя
-    # --env MARIADB_ROOT_PASSWORD - задаём пароль рута
-    # --mount - монтируем каталог mysql внутрь контейнера с валидным путём
+
+>> **пароли видны в явно открытом виде!!!**
+> 
+> **--detach** - запуск в фоне
+> 
+> **--name** - задаём имя контейнера
+> 
+> **--env MARIADB_USER**, **--env MARIADB_PASSWORD** - задаём имя и пароль непривилегированного пользователя
+> 
+> **--env MARIADB_ROOT_PASSWORD** - задаём пароль рута
+> 
+> **--mount** - монтируем каталог mysql внутрь контейнера с валидным путём
+
+<br>
 
     docker run --detach --network <ext_network> --name mariadb --env MYSQL_USER=mariadb_user --env MYSQL_PASSWORD=<password> --env MYSQL_ROOT_PASSWORD=<root_password> --mount "type=bind,src=$(pwd)/mysql,dst=/var/lib/mysql" mariadb:latest
 
-    # или читабельнее
-    # ` - символ конца каретки (escape character pwsh)
+> или читабельнее
+>
+> **`** - символ конца каретки (escape character pwsh)
 
     docker run `
     --detach `
@@ -56,12 +68,13 @@
 
 ### Запуск Adminer (GUI для БД MariaDB) в своей подсети (CLI)
 
-    # -p - проброс порта наружу (локально:внутри)
-    # -e (--env) ADMINER_DEFAULT_SERVER - "подцепляемся" к БД с заданным именем хоста (имя контейнера с базой)
+> **-p** - проброс порта наружу (локально:внутри)
+> 
+> **-e (--env) ADMINER_DEFAULT_SERVER** - "подцепляемся" к БД с заданным именем хоста (имя контейнера с базой)
 
     docker run --detach --network <ext_network> --name adminer -p 8080:8080 -e ADMINER_DEFAULT_SERVER=mariadb adminer:latest
 
-    # или читабельнее
+> или читабельнее
 
     docker run `
     --detach `
@@ -89,44 +102,68 @@
 
 ### Запуск docker compose (YAML):
 
-    # --file - относительный путь к файлу (можно не указывать при наличии файла {docker-compose|compose}.{y?ml} в . )
+> **--file** - относительный путь к файлу (можно не указывать при наличии файла `{docker-compose|compose}.{y?ml}` в **.** )
     
     docker compose --file .\docker_compose.yaml up --detach
 <br>
 
 ### Выключение docker compose (YAML):
 
-    ## если compose единственный, то имя можно не указывать
+> если compose единственный, то имя можно не указывать
 
     docker compose down <top-level-аттрибут name: в {docker-compose|compose}.{y?ml}>
 <br>
 
 ### Смена пароля в MariaDB:
 
-    # входим в контейнер mariadb
+> входим в контейнер с <ins>**mariadb**</ins>
+
     docker exec -it <container ID> bash
+<br>
 
-    # при входе с другого хоста (если уже настроены и доступны поключения для входа кроме localhost)
+> при входе с другого хоста (если уже настроены и доступны поключения для входа кроме localhost)
+
     mariadb -u root -h <ip_address> -p
+<br>
 
-    # выбираем базу
+
+> выбираем базу
+
     USE mysql;
+<br>
 
-    # проверяем под кем зашли
+
+> проверяем под кем зашли
+
     SELECT CURRENT_USER();
+<br>
 
-    # смотрим, какие есть пользователи и хосты
+
+> смотрим, какие есть пользователи и хосты
+
     SELECT user,host FROM user;
+<br>
 
-    # стираем привилегии применные БД в процессе авторизации
+
+> стираем привилегии применные БД в процессе авторизации
+
     FLUSH PRIVILEGES;
+<br>
 
-    # меняем пароль пользователя в базе
+
+> меняем пароль пользователя в базе
+
     ALTER USER 'mariadb_user'@'%' IDENTIFIED BY '<new_user_password>';
+<br>
 
-    # меняем пароль рута в базе (руту соответствует 2 хоста)
+
+> меняем пароль рута в базе (руту соответствует 2 хоста)
+
     ALTER USER 'root'@'localhost' IDENTIFIED BY '<new_root_password>';
     ALTER USER 'root'@'%' IDENTIFIED BY '<new_root_password>';
+<br>
 
-    # выход из базы
+
+> выход из базы
+
     exit; 
