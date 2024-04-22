@@ -7,7 +7,6 @@ services:
     build:
       context: ./manager
       dockerfile: Dockerfile
-    # image: adminer:latest
     container_name: adminer
     restart: on-failure
     environment:
@@ -24,7 +23,6 @@ services:
     build:
       context: ./db
       dockerfile: Dockerfile
-    # image: mariadb:latest
     container_name: mariadb
     restart: always
     tty: true
