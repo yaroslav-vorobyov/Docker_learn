@@ -4,6 +4,7 @@
 4. [Docker Docs - Compose](https://docs.docker.com/reference/cli/docker/compose/)
 5. [Docker Docs - Compose Name-top-level](https://docs.docker.com/compose/compose-file/04-version-and-name/#name-top-level-element)
 6. [Docker Docs - Compose Networks-top-level](https://docs.docker.com/compose/compose-file/06-networks/)
+7. [Docker Docs - Compose Build](https://docs.docker.com/compose/compose-file/build/)
 <br>
 
 ### Создать свою подсеть с узнаваемым именем:
@@ -23,7 +24,7 @@
 
 ### Посмотреть список запущенных контейнеров в своей подсети:
     
-> имя сети задаётся в **top-level**-аттрибуте <ins>**networks**</ins>:
+> имя сети задаётся в **top-level**-аттрибуте <ins>**networks**</ins> (при сборке проекта в docker compose):
 
     docker network inspect <ext_network.name>
 
@@ -86,13 +87,17 @@
 
     docker container prune -f
 
-### Запуск docker compose (YAML):
+### Сборка проекта docker compose build (YAML):
+
+    docker compose --file .\docker-compose.yaml build --no-cache
+
+### Запуск docker compose up (YAML):
 
 > * **--file** - относительный путь к конкретному yaml-файлу (можно не указывать при наличии файла `{docker-compose|compose}.{y?ml}` в **.** )
     
     docker compose --file .\docker_compose.yaml up --detach
 
-### Выключение docker compose (YAML):
+### Выключение docker compose down (YAML):
 
 > если **docker compose** единственный, то *имя* **docker compose** можно не указывать
 
