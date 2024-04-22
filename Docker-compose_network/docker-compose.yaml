@@ -1,24 +1,30 @@
 # env COMPOSE_PROJECT_NAME
-name: mariadb_adminer_v1
+name: mariadb_adminer_v2
 
 services:
   ## adminer container
-  adminer:
-    image: adminer:latest
+  adminer_svc:
+    build:
+      context: ./manager
+      dockerfile: Dockerfile
+    # image: adminer:latest
     container_name: adminer
-    restart: always
+    restart: on-failure
     environment:
       ADMINER_DEFAULT_SERVER: mariadb
     ports:
       - 8080:8080
     depends_on:
-      - mariadb
+      - mariadb_svc
     networks:
       - ext_network
 
   ## mariadb (mysql) container
-  mariadb:
-    image: mariadb:latest
+  mariadb_svc:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    # image: mariadb:latest
     container_name: mariadb
     restart: always
     tty: true
