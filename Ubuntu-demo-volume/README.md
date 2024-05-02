@@ -11,7 +11,7 @@
 <br>
 
 > * #external: true (**FALSE**), `external` *ВЫКЛ*, будет создан **новый docker volume**.<br>
-Даже, если <volume_name> *существует*, то будет создан новый, вида **<project_name>_<volume_name>**, где **<volume_name>** - <имя тома, вложенное в top-level-аттрибуте volumes: в {docker-compose|compose}.{y?ml}>, а **<project_name>** - имя каталога откуда собирается docker compose.
+Даже, если <volume_name> *существует*, то будет создан новый, вида **<project_name>_<volume_name>**, где **<volume_name>** - <имя тома, вложенное в **top-level**-аттрибуте <ins>**volumes:**</ins> в {docker-compose|compose}.{y?ml}>, а **<project_name>** - имя каталога откуда собирается docker compose.
 <p align="center"><img src='./images/volumes_external_FALSE.png' width='100%'></p>
 
 В целях эксперимента - во втором случае, том уже существовал (видно из скринов) и был наполнен вручную с внешним доступом к папке и из контейнера (для визуального отличия томов и чтобы закрепить нюанс поведения при работе volumes-top-level).
