@@ -7,10 +7,10 @@ services:
       dockerfile: ./Dockerfile
     volumes:
       - ubuntu-demo-volume:/data/
-    ## флаг -t (для скрытия паролей и предварительной остановки контейнера после запуска)
-    tty: true
-    ## флаг -i (для поддержки pipeline |)
+    ## флаг -i (для поддержки pipeline | и отмены остановки контейнера после запуска, поддержка открытого интерактивного STDIN)
     stdin_open: true
+    ## флаг -t (для скрытия паролей, поддержка интерактивного STDIN и STDOUT)
+    tty: true
 
 volumes:
   ubuntu-demo-volume:
