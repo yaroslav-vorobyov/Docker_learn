@@ -3,18 +3,21 @@
 3. [Docker Docs - Compose stdin_open](https://docs.docker.com/compose/compose-file/05-services/#stdin_open)
 4. [Docker Docs - Compose Build](https://docs.docker.com/compose/compose-file/build/)
 5. [Docker Docs - Compose Volumes-top-level](https://docs.docker.com/compose/compose-file/07-volumes/)
+6. [Docker Docs - Compose Using build and image](https://docs.docker.com/compose/compose-file/build/#using-build-and-image)
 
 ### Сборка `docker compose` и аттрибут **<external: true>**
 
-> * external: true (**TRUE**) `external` *ВКЛ*, используется **существующий docker volume**
+> * **external: true (TRUE)** `external` *ВКЛ*, используется **существующий docker volume**
 <p align="center"><img src='./images/volumes_external_TRUE.png' width='100%'></p>
 <br>
 
-> * #external: true (**FALSE**), `external` *ВЫКЛ*, будет создан **новый docker volume**.<br>
+> * **#external: true (FALSE)**, `external` *ВЫКЛ*, будет создан **новый docker volume**.<br>
 Даже, если <volume_name> *существует*, то будет создан новый, вида **<project_name>_<volume_name>**, где **<volume_name>** - <имя тома, вложенное в **top-level**-аттрибуте <ins>**volumes:**</ins> в {docker-compose|compose}.{y?ml}>, а **<project_name>** - имя каталога откуда собирается docker compose.
 <p align="center"><img src='./images/volumes_external_FALSE.png' width='100%'></p>
 
 В целях эксперимента - во втором случае, том уже существовал (видно из скринов) и был наполнен вручную с внешним доступом к папке и из контейнера (для визуального отличия томов и чтобы закрепить нюанс поведения при работе volumes-top-level).
+
+> * **pull_policy: missing** - политика выгрузки: выгрузить указанный image с Docker Hub при его отсутствии в кэше локального репозитория и собрать в соответствии с инструкциями в контексте указанного Dockerfile, вложенного в `build`
 
 ### Подробнее о tty / stdin:
 [thelinuxcode.com - Первоисточник](https://thelinuxcode.com/what-is-the-docker-run-it-flag/)
