@@ -1,0 +1,18 @@
+services:
+  ubuntu:
+    image: ubuntu:latest
+    pull_policy: missing
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ubuntu-demo-volume:/data/
+    ## флаг -t (для скрытия паролей и предварительной остановки контейнера после запуска)
+    tty: true
+    ## флаг -i (для поддержки pipeline |)
+    stdin_open: true
+
+volumes:
+  ubuntu-demo-volume:
+    ## если используем существующий том Docker
+    # external: true
