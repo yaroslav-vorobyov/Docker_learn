@@ -1,0 +1,18 @@
+FROM ubuntu:latest
+# обновление репозиториев, установка пакетов и очистка apt кэша 
+RUN apt update && \
+    apt install openssh-server sudo nano vim -y && \
+    rm -rf /var/lib/apt/lists/*
+# RUN systemctl enable ssh && service sshd start
+# создаём пользователя test, задаём пароли для остальных
+RUN useradd -rm -d /home/test -s /bin/bash -g root -G sudo -u 999 test && \
+    echo 'test:test' | chpasswd && \
+    echo 'ubuntu:ubuntu' | chpasswd && \
+    echo 'root:root' | chpasswd
+# создаём каталог для службы sshd, задаём права на каталог
+# правим конфигурационные файлы, вторая строка sed для старых версий ubuntu (SSH login fix, отбивка юзера после входа)
+RUN mkdir -p -m0755 /var/run/sshd && \
+    sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' /etc/pam.d/sshd
+EXPOSE 22
+CMD ["/usr/sbin/sshd","-D"]
