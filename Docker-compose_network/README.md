@@ -33,16 +33,12 @@
 >> **пароли видны в явно открытом виде!!!**
 > 
 > * **--detach** - запуск в фоне
-> 
 > * **--name** - задаём имя контейнера
-> 
 > * **--env MARIADB_USER**, **--env MARIADB_PASSWORD** - задаём имя и пароль непривилегированного пользователя
-> 
 > * **--env MARIADB_ROOT_PASSWORD** - задаём пароль рута
-> 
 > * **--mount** - монтируем каталог mysql внутрь контейнера с валидным путём
 
-    docker run --detach --network <ext_network> --name mariadb --env MYSQL_USER=mariadb_user --env MYSQL_PASSWORD=<password> --env MYSQL_ROOT_PASSWORD=<root_password> --mount "type=bind,src=$(pwd)/mysql,dst=/var/lib/mysql" mariadb:latest
+    docker run --detach --network <ext_network> --name mariadb --env MYSQL_USER=mariadb_user --env MYSQL_PASSWORD=<user_password> --env MYSQL_ROOT_PASSWORD=<root_password> --mount "type=bind,src=$(pwd)/mysql,dst=/var/lib/mysql" mariadb:latest
 
 > или читабельнее<br>
 > **`** - символ конца каретки (escape character pwsh)
@@ -52,7 +48,7 @@
     --network <ext_network> `
     --name mariadb `
     --env MYSQL_USER=mariadb_user `
-    --env MYSQL_PASSWORD=<password> `
+    --env MYSQL_PASSWORD=<user_password> `
     --env MYSQL_ROOT_PASSWORD=<root_password> `
     --mount "type=bind,src=$(pwd)/mysql,dst=/var/lib/mysql" `
     mariadb:latest
@@ -60,7 +56,6 @@
 ### Запуск Adminer (GUI для БД MariaDB) в своей подсети (CLI):
 
 > * **-p** - проброс порта наружу (локально:внутри)
-> 
 > * **-e (--env) ADMINER_DEFAULT_SERVER** - "подцепляемся" к БД с заданным именем хоста (имя контейнера с базой)
 
     docker run --detach --network <ext_network> --name adminer -p 8080:8080 -e ADMINER_DEFAULT_SERVER=mariadb adminer:latest
