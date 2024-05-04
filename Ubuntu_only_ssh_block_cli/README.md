@@ -13,7 +13,7 @@
 
 > * **--tag** - индивидуальная метка для нового образа \<IMAGE : TAG>
 
-    docker image build --tag ubuntu:ssh .
+    docker image build --tag <image_name:tag_name> .
 
 ### Запуск контейнера:
 
@@ -23,7 +23,7 @@
 > * **--name** - имя контейнера
 > * **--publish** - проброс портов (локально:внутри)
 
-    docker container run --detach --interactive --tty --name ubuntu_ssh --publish 2222:22 ubuntu:ssh
+    docker container run --detach --interactive --tty --name <container_name> --publish 2222:22 <image_name:tag_name>
 
 ### Вывод ID контейнера(-ов):
 
@@ -52,10 +52,12 @@
 
 ### Ограничение подключения (конкретный пользователь по SSH):
 
+> **`** - символ конца каретки (escape character pwsh)
+
     docker context create `
     --docker host=ssh://test@$(docker container ls --all --format '{{.ID}}' --filter 'ancestor=ubuntu:ssh' --no-trunc) `
-    --description="Ubuntu_ssh_docker_engine" `
-    ubuntu_ssh_docker_engine
+    --description=<"Desciption"> `
+    <context_name>
 
 ### Все контекты в системе:
 
@@ -63,15 +65,21 @@
 
 ### Обновить контекст (строку подключения, параметр --docker):
 
-    docker context update ubuntu_ssh_docker_engine --docker "host=ssh://test@localhost"
+    docker context update <context_name> --docker "host=ssh://test@localhost"
 
-### Переключиться на стандартный контекст:
+### Переключиться на контекст:
+
+> * стандартный (включен по умолчанию, как активный отмечен `*`)
 
     docker context use default
+
+> * свой (при переключении будет отмечен `*`)
+
+    docker context use <context_name>
 
 ### Прибраться:
 
 > * **--time** - сократить время ожидания до остановки контейнера до 2 сек (вместо стандартных 10); использовать только, если есть уверенность, что контейнер завершит внутренние операции перед получением им сигнала SIGKILL за установленное время.
 
     docker container stop --time 2 my_container && docker container prune -f && docker image rm ubuntu:ssh
-    docker context rm ubuntu_ssh_docker_engine
+    docker context rm <context_name>
