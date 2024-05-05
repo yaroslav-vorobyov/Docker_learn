@@ -1,6 +1,6 @@
 1. [Первоисточник](https://github.com/stephenc/busybox-httpd-docker)
-1. [Docker Docs - docker cp](https://docs.docker.com/reference/cli/docker/container/cp/)
-
+2. [Busybox Docs](https://www.busybox.net/downloads/BusyBox.html)
+3. [Docker Docs - docker cp](https://docs.docker.com/reference/cli/docker/container/cp/)
 
 ### Сборка и запуск контейнера:
 
@@ -18,6 +18,8 @@
 
     docker exec <container_name | ID> sh -c "echo '<h1>Hello World!</h1>' > /var/www/html/index.html"
 
+<p align="center"><img src='./images/Screenshot 2024-05-04 184105.png' width='100%'></p>
+
 > * нестандартное приветствие 8D
 > 
 > где:
@@ -25,6 +27,8 @@
 > * в подфункции забирается значение переменной HOME из контейнера 
 
     docker exec <container_name | ID> sh -c "echo '<h1>Dockerhost is $(hostname)<br>Homedir in container is $(docker exec busybox env | grep -i HOME | awk -F '=' '{print $2}')</h1>' > /var/www/html/index.html"
+
+<p align="center"><img src='./images/Screenshot 2024-05-04 184201.png' width='100%'></p>
 
 ### Выгрузка файла из контейнера:
 
